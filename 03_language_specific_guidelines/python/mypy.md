@@ -1,140 +1,86 @@
-# Using mypy for Robust, Type-Safe Python
+# Strict Typing & Data Contracts (Problem → Solution)
 
-`mypy` is a static type checker for Python. It allows you to add type hints to your code and then check them for correctness before you run the code. This can help you catch a wide variety of errors before they make it into production.
+Mindset shift: move from “it runs” scripting to contract-first engineering. Strict typing plus runtime-validated data models eradicate the `AttributeError: 'NoneType' object has no attribute 'x'` class of bugs and make refactors safe.
 
-## 1. Problem: The Perils of Dynamic Typing
+## Problem: Dynamic Drift
+- Hidden `None`s and shape changes leak to prod (runtime crashes, bad data persisted).
+- Refactors are risky: no contracts to catch broken call sites.
+- Tooling and IDE assistance are weak without types.
 
-Python's dynamic typing is one of its greatest strengths. It allows for rapid prototyping and a flexible, expressive syntax. However, in large, complex codebases, dynamic typing can become a liability.
+## Solution: Compile-Time + Runtime Contracts
+- **mypy in strict mode** guards call sites, optionality, and API drift.
+- **Pydantic models** validate/normalize external inputs (HTTP/DB/queue) at runtime and expose typed, immutable value objects.
+- **Protocols** express ports; concrete adapters must satisfy them (structural typing).
 
-- **`None`-related errors:** The infamous `AttributeError: 'NoneType' object has no attribute '...` is a common bug that can be difficult to track down.
-- **Incorrect types passed to functions:** Passing a `str` to a function that expects an `int` can lead to subtle bugs that are only discovered at runtime.
-- **Refactoring nightmares:** Without type information, it can be difficult to refactor code with confidence. It's hard to know what the expected inputs and outputs of a function are, and what the impact of a change will be.
-- **Poor autocompletion and IDE support:** IDEs and other development tools have a hard time providing accurate autocompletion and analysis for dynamically typed code.
-
-## 2. Solution: Static Typing with `mypy`
-
-`mypy` brings the benefits of static typing to Python, without sacrificing the language's flexibility. By adding type hints to your code, you can:
-
-- **Catch errors early:** `mypy` will flag type errors before you even run your code, saving you from debugging runtime errors.
-- **Improve code quality and readability:** Type hints serve as a form of documentation, making your code easier to read and understand.
-- **Refactor with confidence:** With type information, you can refactor your code with confidence, knowing that `mypy` will catch any type-related errors you introduce.
-- **Better IDE support:** IDEs can use type hints to provide better autocompletion, code navigation, and error highlighting.
-
-## 3. Zero-to-Hero with `mypy`
-
-### Step 1: Basic Type Hinting
-
-You can start by adding basic type hints to your functions.
-
+## Minimal “Hello, Strict” Example
 ```python
-def greet(name: str) -> str:
-    return f"Hello, {name}"
+from typing import Protocol
+from pydantic import BaseModel
 
-# mypy will flag this as an error
-greet(123)
+class Inventory(Protocol):
+    async def get(self, product_id: str) -> int: ...
+
+class ProductIn(BaseModel):
+    id: str
+    quantity: int
+
+async def reserve(inv: Inventory, payload: ProductIn) -> None:
+    current = await inv.get(payload.id)
+    if payload.quantity > current:
+        raise ValueError("Insufficient stock")
 ```
+- mypy enforces `Inventory.get` signature and `ProductIn` attributes.
+- Pydantic rejects malformed payloads before domain logic runs.
 
-### Step 2: Complex Types
-
-The `typing` module provides a rich set of types for more complex scenarios.
-
-- **`List`, `Tuple`, `Dict`, `Set`**: For generic containers.
-- **`Optional[T]`**: For values that can be `None`. `Optional[str]` is equivalent to `Union[str, None]`.
-- **`Union[T, U]`**: For values that can be one of several types.
-- **`Any`**: A dynamic type that can be anything. Use it as a last resort.
-
-```python
-from typing import List, Optional
-
-def find_user(users: List[dict], user_id: int) -> Optional[dict]:
-    for user in users:
-        if user["id"] == user_id:
-            return user
-    return None
-```
-
-### Step 3: Advanced Types (`TypeVar`, `Protocol`, `TypedDict`)
-
-- **`TypeVar`**: For creating generic functions and classes.
-- **`Protocol`**: For defining structural subtypes (duck typing).
-- **`TypedDict`**: For providing type information for dictionaries with a fixed set of keys.
-
-```python
-from typing import TypedDict
-
-class User(TypedDict):
-    id: int
-    name: str
-    email: str
-
-def get_user_name(user: User) -> str:
-    return user["name"]
-```
-
-## 4. Real-World Example: Catching a Bug
-
-Consider this code:
-
-```python
-def send_email(email: str, message: str):
-    # ...
-    pass
-
-def notify_user(user):
-    # What if user is None?
-    send_email(user["email"], "Your order has shipped!")
-```
-
-Without `mypy`, this code will raise an `AttributeError` at runtime if `user` is `None`. With `mypy`, you can catch this bug before it ever happens.
-
-```python
-from typing import Optional
-
-def notify_user(user: Optional[dict]):
-    if user:
-        send_email(user["email"], "Your order has shipped!")
-```
-
-By adding the `Optional[dict]` type hint and a `None` check, `mypy` can verify that the code is safe.
-
-## 5. Configuration and CI/CD
-
-You can configure `mypy` in your `pyproject.toml` or `mypy.ini` file. A strict configuration is recommended for most projects.
-
+## Guardrails (Strict mypy defaults)
+Put this in `pyproject.toml` or `mypy.ini` to set the tone repo-wide.
 ```ini
 [mypy]
-# Universal strictness
-disallow_any_unimported = true
-disallow_any_expr = false
-disallow_any_decorated = false
-disallow_any_explicit = true
-disallow_any_generics = false
-disallow_subclassing_any = true
+python_version = 3.11
+strict = true
+warn_unused_ignores = true
+warn_return_any = true
+warn_redundant_casts = true
 disallow_untyped_calls = true
 disallow_untyped_defs = true
 disallow_incomplete_defs = true
-check_untyped_defs = true
 disallow_untyped_decorators = true
 no_implicit_optional = true
-warn_redundant_casts = true
-warn_unused_ignores = true
-warn_return_any = true
-implicit_reexport = false
-strict_equality = true
+```
+- Allow narrow opt-outs via per-module overrides; never disable strict globally.
 
-# Per-module overrides can go here
-# e.g. mypy-requests.*
+## Real-World Bug Catch
+```python
+from typing import Optional
 
-# We're not ready for this yet
-#disallow_implicit_reexport = true
+def notify_user(email: Optional[str]) -> None:
+    send_email(email, "Your order shipped!")  # mypy error: Optional[str]
+```
+- Fix with explicit guard or by requiring non-optional input:
+```python
+def notify_user(email: str) -> None:
+    send_email(email, "Your order shipped!")
 ```
 
-You should integrate `mypy` into your CI/CD pipeline to ensure that all new code is type-checked.
+## Migration Playbook (Zero → Hero)
+1) **Turn on strict** with type stubs; start with leaf modules, then core.
+2) **Model inputs**: wrap external payloads in Pydantic models; forbid `dict` passing.
+3) **Define ports** as `Protocol` interfaces; have adapters satisfy them.
+4) **Kill `Any`**: forbid implicit `Any`; tighten `Optional` handling.
+5) **Wire CI**: gate on `ruff check`, `ruff format`, `mypy --strict`, `pytest -q`.
+6) **Measure**: track type coverage; budget time each sprint to burn down ignores.
 
+## CI Snippet
 ```yaml
-# .github/workflows/ci.yml
-- name: Run mypy
-  run: mypy .
+- name: Lint & typecheck
+  run: |
+    ruff check .
+    ruff format --check .
+    mypy --strict .
 ```
 
-By embracing static typing with `mypy`, you can write more robust, maintainable, and error-free Python code.
+## Success Criteria
+- Zero implicit `Any`; optionality handled explicitly.
+- All external inputs validated/normalized via Pydantic before domain use.
+- Ports defined as protocols; adapters type-check without casts.
+- Refactors rely on type errors, not runtime incidents. 
