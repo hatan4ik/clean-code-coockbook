@@ -38,7 +38,9 @@ This module moves from blocking, thread‑bound thinking to event‑loop and gor
 - **Error typing:** raise/return typed errors for timeouts vs failures; prefer partial responses over total failure when safe.
 - **Avoid blocking in async:** no `time.sleep`/blocking clients in async code; offload CPU to process pools.
 
-### 7. Measure & Observe
-- Instrument spans per upstream call; tag timeouts separately from failures.
-- Emit metrics: in-flight requests, semaphore queue length, timeout count, cancellation count, p95/p99 latency.
-- Load test fan-out with slow/failed upstreams to verify backpressure and breaker behavior.
+### 7. Measure & Observe (make it visible)
+- Latency histograms: p50/p95/p99 for the overall request and per-upstream spans.
+- Concurrency/backpressure: current semaphore usage, queue lengths, in-flight tasks/goroutines.
+- Errors vs timeouts vs cancellations: separate metrics to diagnose the true bottleneck.
+- Saturation signals: CPU, event loop lag (Python), goroutine count/blocking profiles (Go).
+- Load-test matrices: vary concurrency (5/50/500) and upstream delay/failure rates; plot the knee of the curve and validate breakers/timeouts.
