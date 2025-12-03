@@ -1,4 +1,7 @@
-### Go goroutines + errgroup
+### Go Goroutines + `errgroup`
+
+This solution uses goroutines and the `golang.org/x/sync/errgroup` package to concurrently fetch data from multiple upstream services. `errgroup` provides a safe and reliable way to manage a group of goroutines, ensuring that if one goroutine returns an error, the others are cancelled.
+
 ```go
 import (
     "context"
@@ -26,6 +29,27 @@ func FetchProduct(ctx context.Context, id string, c Clients) (Product, error) {
 }
 ```
 
-### Patterns and Guardrails
-- Always set timeouts; propagate `context.Context` (Go) and cancellation (Python) to downstream calls.
-- Apply backpressure: semaphores for concurrency limits; worker pools for CPU‑bound work.
+- **`func FetchProduct(...)`**: This defines a function that takes a `context.Context`, a product ID, and a `Clients` struct as input.
+- **`context.WithTimeout(...)`**: This creates a new `context.Context` with a timeout. This is important for preventing long-running requests from tying up resources. The `defer cancel()` ensures that the context is cancelled when the function returns.
+- **`errgroup.WithContext(...)`**: This creates a new `errgroup` that is associated with the `context.Context`. If the context is cancelled, the `errgroup` will also be cancelled.
+- **`group.Go(...)`**: This starts a new goroutine within the `errgroup`. The goroutine will execute the provided function. If the function returns an error, the `errgroup` will cancel the other goroutines and return the error.
+- **`group.Wait()`**: This blocks until all the goroutines in the `errgroup` have completed. If any of the goroutines returned an error, `Wait()` will return that error.
+
+### Running and Testing
+
+To run this code, you would typically call this `FetchProduct` function from within an HTTP handler in a web framework like `net/http`, Chi, or Gin.
+
+For testing, you can use Go's built-in testing package. You can create a mock `Clients` struct that returns canned data, and then call `FetchProduct` with a test context.
+
+### Dependency Injection
+
+In this example, the `Clients` struct is a form of dependency injection. The `FetchProduct` function doesn't create the clients itself; it receives them as an argument. This makes the function easier to test, as you can pass in mock clients during testing.
+
+```go
+type Clients struct {
+    Inventory *InventoryClient
+    Pricing   *PricingClient
+    Reviews   *ReviewsClient
+}
+```
+This pattern is very common in Go and is a great way to write clean, testable code.
