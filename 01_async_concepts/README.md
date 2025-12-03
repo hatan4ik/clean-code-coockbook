@@ -151,3 +151,10 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
+```
+4. Key Takeaways for the Architect
+Async is contagious: You cannot mix blocking I/O (like requests or time.sleep) inside an async function, or you block the entire loop.
+
+Use Modern Primitives: Use asyncio.TaskGroup (Python 3.11+) instead of gather() for better error handling.
+
+IO-Bound only: Async is for waiting (Network, DB, Disk). It does not speed up CPU-heavy calculations (Matrix multiplication, Image processing).
