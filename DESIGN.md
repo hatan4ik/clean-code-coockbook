@@ -510,10 +510,20 @@ This approach creates a clean separation of concerns, allowing each service to b
 
 This section will cover the tools and practices we recommend for building high-quality software.
 
-*   **Linters and Formatters:** `ruff`, `gofmt`, `golint`
-*   **CI/CD:** Continuous Integration and Continuous Delivery best practices.
-*   **Observability:** Logging, metrics, and tracing.
-*   **Security:** Leveraging tools like Snyk to ensure code is secure from the start.
+*   **Linters and Formatters:**
+    *   **Python:** `ruff` for ultra-fast linting and formatting, `mypy` for static type checking, and `black` for uncompromising code formatting.
+    *   **Go:** `gofmt` for formatting, `golangci-lint` for a comprehensive and fast linter aggregator.
+*   **Continuous Integration & Delivery (CI/CD):**
+    *   **Principles:** We advocate for short-lived feature branches, automated testing on every commit, and automated deployments to staging and production.
+    *   **Tools:** We will provide examples using `GitHub Actions`, but the principles can be applied to any CI/CD system.
+*   **Observability (The Three Pillars):**
+    *   **Logging:** Structured, machine-readable logs (e.g., JSON) are a must. We will use `structlog` for Python and `slog` for Go.
+    *   **Metrics:** Instrumenting code with `Prometheus` to monitor key performance indicators (KPIs). We will show how to expose a `/metrics` endpoint.
+    *   **Tracing:** Using `OpenTelemetry` to trace requests across service boundaries. We will demonstrate how to propagate trace context and export traces to `Jaeger`.
+*   **Security First:**
+    *   **SAST (Static Application Security Testing):** We use `Snyk` to scan our code for vulnerabilities. See the [Snyk Security Instructions](./.github/instructions/snyk_rules.instructions.md) for more details.
+    *   **Dependency Scanning:** Automated scanning of dependencies for known vulnerabilities using `Snyk` or `dependabot`.
+    *   **Secrets Management:** We will use `HashiCorp Vault` or a similar tool to manage secrets. We will demonstrate how to fetch secrets at runtime and not store them in environment variables.
 
 ## 7. Contribution Guidelines
 
