@@ -24,6 +24,7 @@ This module defines the reference architecture for all cookbook examples. The go
 - **Error Model:** Typed errors with HTTP mapping; avoid panics/exceptions crossing layers; include correlation IDs.
 
 ### 4. Sample Flows
+These links provide concrete, line-by-line examples of how a request flows through the hexagonal architecture, from the web handler to the domain logic and back. They illustrate the key patterns in action.
 
 *   [Python](./python.md#sample-flow-python)
 *   [Go](./go.md#sample-flow-go)

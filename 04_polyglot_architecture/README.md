@@ -25,5 +25,5 @@ To make these services talk to each other, we need a high-performance, language-
 -   **Shared Protobuf Definitions:** Your `.proto` files are the contract between your services. They should be stored in a central repository that is accessible to all your services.
 -   **API Design and Versioning:** Design your APIs to be backward-compatible. Use Protobuf's field numbers carefully to ensure that you can evolve your APIs without breaking existing clients.
 -   **Error Handling:** Establish a clear strategy for propagating errors between services. gRPC has a rich error model that you can use to send structured error information between services.
--   **Authentication and Authorization:** Use gRPC's support for interceptors (middleware) to implement authentication and authorization.
+-   **Authentication and Authorization:** Use gRPC's support for interceptors (middleware) to implement authentication and authorization. This can include JWT validation, API key checking, or integrating with an external auth service. For service-to-service auth, consider using mTLS.
 -   **Observability:** In a polyglot environment, it's crucial to have good observability. Use distributed tracing and metrics to get a clear picture of how your services are interacting with each other. OpenTelemetry is a great choice for this.

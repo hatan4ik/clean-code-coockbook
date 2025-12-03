@@ -8,3 +8,4 @@ This section focuses on architecting Go systems based on the philosophy of "simp
 - **[Interfaces](./interfaces.md)**: Using interfaces to write flexible and decoupled code.
 - **[Concurrency](./concurrency.md)**: Best practices for writing concurrent code with goroutines and channels.
 - **[Error Handling](./error_handling.md)**: Idiomatic error handling in Go.
+- **[Testing](./testing.md)**: Strategies for unit, integration, and end-to-end testing in Go.

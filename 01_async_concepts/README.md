@@ -25,6 +25,7 @@ This module moves from blocking, thread‑bound thinking to event‑loop and gor
 - Step 3: Introduce a semaphore/worker pool to cap fan‑out; add tracing spans per upstream call.
 - Step 4: Ship the aggregator as a FastAPI handler (Python) and Gin/Chi handler (Go) with metrics and structured logs.
 - Step 5: Write tests: unit tests for orchestration, integration tests with mocked upstream delays, contract tests for response shape.
+- Step 6: Advanced Patterns & Production Hardening: Implement a circuit breaker pattern to handle failing upstream services gracefully. Explore structured concurrency with `asyncio.TaskGroup` (Python 3.11+) and `errgroup` with context propagation (Go) for more robust error handling and cancellation.
 
 ### 5. What Success Looks Like
 - Measurable improvement: 10x concurrency with the same hardware; predictable p99 with controlled timeouts.
