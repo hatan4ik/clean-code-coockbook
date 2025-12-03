@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package recommendations;
+
+option go_package = "github.com/clean-code-coockbook/proto/gen/go/recommendations";
+
+service Recommender {
+  rpc GetRecommendations(RecommendationRequest) returns (RecommendationResponse);
+  rpc StreamRecommendations(RecommendationRequest) returns (stream RecommendationItem);
+}
+
+message RecommendationRequest {
+  string user_id = 1;
+  int32 max_results = 2;
+}
+
+message RecommendationResponse {
+  repeated RecommendationItem items = 1;
+}
+
+message RecommendationItem {
+  string product_id = 1;
+}
