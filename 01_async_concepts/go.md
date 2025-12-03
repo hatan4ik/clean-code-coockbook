@@ -53,3 +53,51 @@ type Clients struct {
 }
 ```
 This pattern is very common in Go and is a great way to write clean, testable code.
+
+### Backpressure and Deadlines
+
+Cap concurrent work and enforce deadlines to keep tail latency predictable.
+
+```go
+package catalog
+
+import (
+    "context"
+    "time"
+    "golang.org/x/sync/semaphore"
+)
+
+var sem = semaphore.NewWeighted(50)
+
+func FetchMany(ctx context.Context, ids []string, c Clients) ([]Product, error) {
+    ctx, cancel := context.WithTimeout(ctx, 250*time.Millisecond)
+    defer cancel()
+
+    results := make([]Product, len(ids))
+    g, ctx := errgroup.WithContext(ctx)
+
+    for i, id := range ids {
+        i, id := i, id
+        g.Go(func() error {
+            if err := sem.Acquire(ctx, 1); err != nil {
+                return err
+            }
+            defer sem.Release(1)
+            p, err := FetchProduct(ctx, id, c)
+            if err != nil {
+                return err
+            }
+            results[i] = p
+            return nil
+        })
+    }
+
+    if err := g.Wait(); err != nil {
+        return nil, err
+    }
+    return results, nil
+}
+```
+
+- `semaphore.Weighted` limits concurrency across requests; avoids overload.
+- Context deadline keeps the whole batch bounded; partials can be returned if desired.

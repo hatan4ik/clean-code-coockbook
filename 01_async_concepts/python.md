@@ -45,3 +45,26 @@ Here are some async-compatible libraries that you should use:
 - **HTTP clients**: `httpx`, `aiohttp`
 - **Database drivers**: `asyncpg` (for PostgreSQL), `aiomysql` (for MySQL)
 - **Redis clients**: `redis-py` (which has built-in async support)
+
+### Backpressure with Semaphores
+
+When fan-out targets can spike, cap concurrency to protect upstreams and your event loop.
+
+```python
+import asyncio
+from asyncio import Semaphore, TaskGroup
+
+sem = Semaphore(50)
+
+async def fetch_with_cap(client, pid: str) -> dict:
+    async with sem:
+        return await client.get(pid, timeout=0.2)
+
+async def fetch_many(client, ids: list[str]) -> list[dict]:
+    async with TaskGroup() as tg:
+        tasks = [tg.create_task(fetch_with_cap(client, pid)) for pid in ids]
+    return [await t for t in tasks]
+```
+
+- `Semaphore` prevents runaway concurrency.
+- Combine with per-call timeouts and cancellation to avoid pile-ups.

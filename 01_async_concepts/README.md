@@ -30,3 +30,15 @@ This module moves from blocking, thread‑bound thinking to event‑loop and gor
 ### 5. What Success Looks Like
 - Measurable improvement: 10x concurrency with the same hardware; predictable p99 with controlled timeouts.
 - Code is readable, typed, and testable; cancellation works end‑to‑end; observability shows spans per upstream call.
+
+### 6. Patterns and Guardrails
+- **Timeout discipline:** per-upstream deadlines slightly below the request deadline; fail fast to protect the system.
+- **Backpressure:** semaphores or bounded worker pools to cap fan-out; shed load early when saturated.
+- **Cancellation propagation:** never swallow `CancelledError`/context cancellations; ensure spawned tasks are supervised and cleaned up.
+- **Error typing:** raise/return typed errors for timeouts vs failures; prefer partial responses over total failure when safe.
+- **Avoid blocking in async:** no `time.sleep`/blocking clients in async code; offload CPU to process pools.
+
+### 7. Measure & Observe
+- Instrument spans per upstream call; tag timeouts separately from failures.
+- Emit metrics: in-flight requests, semaphore queue length, timeout count, cancellation count, p95/p99 latency.
+- Load test fan-out with slow/failed upstreams to verify backpressure and breaker behavior.
