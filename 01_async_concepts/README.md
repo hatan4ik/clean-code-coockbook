@@ -19,13 +19,13 @@ This module moves from blocking, thread‑bound thinking to event‑loop and gor
 *   [Python asyncio solution](./python.md)
 *   [Go goroutines + errgroup](./go.md)
 
-### 4. Zero‑to‑Hero Path for This Module
-- Step 1: Run the blocking vs async scripts; measure timing with 5/50/500 concurrent requests.
-- Step 2: Add timeouts and retries with jitter; observe latency distributions.
-- Step 3: Introduce a semaphore/worker pool to cap fan‑out; add tracing spans per upstream call.
-- Step 4: Ship the aggregator as a FastAPI handler (Python) and Gin/Chi handler (Go) with metrics and structured logs.
-- Step 5: Write tests: unit tests for orchestration, integration tests with mocked upstream delays, contract tests for response shape.
-- Step 6: Advanced Patterns & Production Hardening: Implement a circuit breaker pattern to handle failing upstream services gracefully. Explore structured concurrency with `asyncio.TaskGroup` (Python 3.11+) and `errgroup` with context propagation (Go) for more robust error handling and cancellation.
+### 4. Zero‑to‑Hero Path (Do This, Measure It)
+- **Step 1 — Baseline:** Run blocking vs async scripts; record latency at 5/50/500 concurrency.
+- **Step 2 — Deadlines & Jittered Retries:** Add per-upstream timeouts and bounded retries; watch p95/p99 shift.
+- **Step 3 — Backpressure:** Introduce semaphores/worker pools to cap fan‑out; validate no overload of upstreams.
+- **Step 4 — Ship It:** Expose the fan‑out as a FastAPI handler (Python) and Gin/Chi handler (Go) with structured logs and trace spans per upstream.
+- **Step 5 — Tests:** Unit-test orchestration; integration tests with delayed/failing upstream fakes; contract tests for response shape.
+- **Step 6 — Resilience:** Add circuit breakers/hedged requests; ensure cancellation propagates; prove graceful degradation (partial responses when safe).
 
 ### 5. What Success Looks Like
 - Measurable improvement: 10x concurrency with the same hardware; predictable p99 with controlled timeouts.
