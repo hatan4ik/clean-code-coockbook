@@ -1,0 +1,3 @@
+*   **Simplicity and Readability:** Go's design prioritizes code that is easy to read and understand.
+    *   **Guideline:** Avoid overly complex abstractions. A little bit of repeated code is often better than a complex abstraction that is hard to understand.
+    *   **Example:** We will favor simple, clear function and package names. Error handling is explicit and verbose for a reason: it makes the control flow obvious.

@@ -1,0 +1,3 @@
+*   **Dependency Injection for Testability:** We will demonstrate how to structure code to facilitate easy testing and component swapping.
+    *   **Principle:** "Depend on abstractions, not on concretions."
+    *   **Implementation:** We will show how to pass dependencies (like a database connection or an API client) into functions and classes, rather than having them create their own. This makes it trivial to replace them with fakes or mocks in tests.

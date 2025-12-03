@@ -1,0 +1,3 @@
+*   **Advanced `asyncio` Patterns:** We will go beyond basic `await` calls and explore the patterns needed for building resilient, high-concurrency systems.
+    *   **Structured Concurrency with `TaskGroup`:** How to manage the lifecycle of multiple related tasks in a way that is robust and easy to reason about.
+    *   **Resource Management:** Using `asyncio.Semaphore` to limit access to a resource (e.g., a connection pool) and `asyncio.Queue` for producer-consumer patterns.
