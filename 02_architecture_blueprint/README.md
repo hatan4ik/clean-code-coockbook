@@ -18,6 +18,7 @@ This module defines the reference architecture for all cookbook examples. The go
 5) Response DTOs are serialized; metrics and traces are emitted; deadlines respected.
 
 ### 3. Key Patterns
+
 * **Ports and Adapters:** Interfaces live close to consumers; adapters register via constructors/factories.
 * **Unit of Work:** Wrap DB operations in a transaction; emit domain events; publish via outbox.
 * **DTOs vs Domain:** Keep domain models free from framework types. Map at the edges.
@@ -33,12 +34,14 @@ These links provide concrete, line-by-line examples of how a request flows throu
 * [Go](./go.md#sample-flow-go)
 
 ### 5. Checklists
+
 * Separation: domain has zero imports from web/DB/messaging frameworks.
 * Observability: every handler emits traces, metrics (latency, errors), structured logs with correlation IDs.
 * Failure modes: timeouts on all I/O, retries with jitter for idempotent calls, circuit breakers for flaky upstreams.
 * Testing: unit (domain/services), integration (adapters with real deps via testcontainers), contract (API schemas), e2e (happy path).
 
 ### 6. Extension Topics
+
 * CQRS: split read models from write models for high‑read domains.
 * Event sourcing: persist events, rebuild aggregates, snapshotting strategy.
 * Modular monolith vs microservices: start modular; extract when bounded contexts and operational readiness justify it.
