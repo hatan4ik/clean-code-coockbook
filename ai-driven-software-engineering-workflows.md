@@ -2224,45 +2224,103 @@ Format: [JSDoc/Sphinx/etc.]
 - Solution: Retrain team on validation techniques
 - Solution: Reduce AI usage in critical areas
 
-### H. Further Reading and Resources
+---
 
-**Research Papers:**
-- "Productivity Assessment of Neural Code Completion" (2022)
-- "An Empirical Study of GitHub Copilot's Impact" (2023)
-- "Security Implications of AI Code Generation" (2024)
+## Appendix D: Further Reading and Research {#further-reading}
 
-**Industry Reports:**
-- GitHub Copilot Impact Study
-- Stack Overflow Developer Survey (AI Section)
-- Gartner Report on AI-Assisted Development
+### Academic Research
+
+**Productivity and Impact Studies:**
+- Imai, S. (2022). "Productivity Assessment of Neural Code Completion." *arXiv preprint*.
+- Ziegler, A. et al. (2022). "Productivity assessment of neural code completion." *Proceedings of the 6th ACM SIGPLAN International Symposium*.
+- Vaithilingam, P. et al. (2023). "Expectation vs. Experience: Evaluating the Usability of Code Generation Tools Powered by Large Language Models." *CHI Conference on Human Factors in Computing Systems*.
+
+**Security and Correctness:**
+- Pearce, H. et al. (2022). "Asleep at the Keyboard? Assessing the Security of GitHub Copilot's Code Contributions." *IEEE Symposium on Security and Privacy*.
+- Jesse, K. et al. (2023). "Large Language Models for Code: Security Hardening and Adversarial Testing." *ACM Conference on Computer and Communications Security*.
+
+**Human Factors:**
+- Barke, S. et al. (2023). "Grounded Copilot: How Programmers Interact with Code-Generating Models." *OOPSLA*.
+- Prather, J. et al. (2023). "The Robots Are Here: Navigating the Generative AI Revolution in Computing Education." *ACM Inroads*.
+
+### Industry Reports
+
+**GitHub and Microsoft Research:**
+- "Research: Quantifying GitHub Copilot's Impact on Developer Productivity and Happiness" (2022)
+- GitHub Copilot Impact Survey Results (Annual)
+
+**Market Research:**
+- Gartner: "Market Guide for AI-Augmented Software Engineering" (Annual)
+- Forrester: "The State of AI in Software Development" (2024)
+- Stack Overflow Developer Survey - AI Tools Section (Annual)
+
+### Books
+
+**AI and Software Engineering:**
+- Bird, C., et al. (2024). *Software Engineering at Google: Lessons Learned from Programming Over Time*. (Updated chapters on AI)
+- Forsgren, N., et al. (2024). *Accelerate: Building and Scaling High-Performing Technology Organizations*. (2nd Edition with AI coverage)
+
+**Prompt Engineering:**
+- White, J. et al. (2023). *Prompt Engineering for Developers*. O'Reilly Media.
+- Breck, E. et al. (2024). *Prompting for Software Engineering*. Pragmatic Programmers.
+
+### Online Resources
 
 **Communities:**
-- r/MachineLearning
-- AI Code Generation Discord
-- GitHub Copilot Community Forums
+- r/MachineLearning - AI development discussions
+- r/ExperiencedDevs - Professional perspectives on AI tools
+- AI Code Generation Discord - Community of practitioners
+- GitHub Copilot Community Forums - Official support and discussions
 
-**Training Resources:**
-- Prompt Engineering for Developers (DeepLearning.AI)
-- AI-Assisted Development Course (Pluralsight)
-- GitHub Copilot Documentation
+**Courses and Training:**
+- "ChatGPT Prompt Engineering for Developers" - DeepLearning.AI (Free)
+- "AI-Assisted Software Development" - Pluralsight
+- "GitHub Copilot Fundamentals" - GitHub Learning Lab
+- "Coding with AI" - LinkedIn Learning
 
-### I. Glossary
+**Blogs and Newsletters:**
+- GitHub Blog - AI and ML section
+- The Pragmatic Engineer - AI tools coverage
+- Martin Fowler's Blog - Occasional AI/dev tool posts
+- Software Engineering Daily - AI podcast episodes
 
-**Context Window**: The amount of text (measured in tokens) an AI model can process at once
+### Tools Documentation
 
-**Hallucination**: When AI confidently generates incorrect or nonsensical output
+**Official Documentation:**
+- GitHub Copilot Documentation: docs.github.com/copilot
+- Amazon CodeWhisperer: docs.aws.amazon.com/codewhisperer
+- Tabnine Documentation: tabnine.com/documentation
+- OpenAI API Documentation: platform.openai.com/docs
 
-**Prompt Engineering**: The practice of crafting effective prompts to get desired AI outputs
+---
 
-**Token**: Basic unit of text for AI models (~3/4 of a word on average)
+## Appendix E: Glossary {#glossary}
 
-**Fine-tuning**: Training an AI model on specific data to improve domain performance
+**AI Agent**: An AI system that can take actions autonomously to complete tasks, beyond just generating text responses.
 
-**RAG (Retrieval-Augmented Generation)**: Technique combining retrieval and generation for better context
+**AI-Generated Code**: Code produced by an AI tool based on natural language prompts or context.
 
-**Zero-shot**: AI performing tasks without specific training examples
+**Boilerplate Code**: Repetitive code patterns that must be written with little variation (CRUD operations, getters/setters, etc.).
 
-**Few-shot**: Providing a few examples in the prompt to guide AI behavior
+**Context Window**: The amount of text (measured in tokens) an AI model can process at once. Typical ranges: 8K-200K tokens.
+
+**Fine-tuning**: Training an AI model on specific data to improve domain performance and accuracy.
+
+**Few-shot**: Providing a few examples in the prompt to guide AI behavior and output format.
+
+**Hallucination**: When AI confidently generates incorrect, nonsensical, or fabricated output that appears plausible.
+
+**Hexagonal Architecture**: Also known as Ports and Adapters pattern; separates business logic from external concerns.
+
+**Prompt Engineering**: The practice of crafting effective prompts to get desired AI outputs consistently.
+
+**RAG (Retrieval-Augmented Generation)**: Technique combining information retrieval with text generation for better context and accuracy.
+
+**Technical Debt**: Implied cost of additional rework caused by choosing quick/easy solutions instead of better approaches.
+
+**Token**: Basic unit of text for AI models; roughly 3/4 of an English word on average (e.g., "cat" = 1 token, "butterfly" = 2 tokens).
+
+**Zero-shot**: AI performing tasks without specific training examples, relying only on pre-training knowledge.
 
 ---
 
