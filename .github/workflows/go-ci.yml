@@ -1,0 +1,94 @@
+name: Go CI
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'go/**'
+      - '.github/workflows/go-ci.yml'
+  pull_request:
+    branches: [ main, develop ]
+    paths:
+      - 'go/**'
+      - '.github/workflows/go-ci.yml'
+
+jobs:
+  test:
+    name: Test Go ${{ matrix.go-version }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        go-version: ['1.21.x', '1.22.x', '1.23.x']
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Go ${{ matrix.go-version }}
+      uses: actions/setup-go@v5
+      with:
+        go-version: ${{ matrix.go-version }}
+        cache-dependency-path: go/services/catalog/go.sum
+    
+    - name: Install dependencies
+      working-directory: go/services/catalog
+      run: go mod download
+    
+    - name: Format check
+      working-directory: go/services/catalog
+      run: |
+        if [ "$(gofmt -s -l . | wc -l)" -gt 0 ]; then
+          echo "Go code is not formatted:"
+          gofmt -s -d .
+          exit 1
+        fi
+    
+    - name: Run tests
+      working-directory: go/services/catalog
+      run: go test ./... -v -race -count=1
+    
+    - name: Run tests with coverage
+      working-directory: go/services/catalog
+      run: go test ./... -coverprofile=coverage.out -covermode=atomic
+    
+    - name: Upload coverage
+      uses: codecov/codecov-action@v4
+      with:
+        file: go/services/catalog/coverage.out
+        flags: go
+      continue-on-error: true
+  
+  lint:
+    name: Lint Go Code
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Go
+      uses: actions/setup-go@v5
+      with:
+        go-version: '1.23.x'
+        cache-dependency-path: go/services/catalog/go.sum
+    
+    - name: golangci-lint
+      uses: golangci/golangci-lint-action@v6
+      with:
+        version: latest
+        working-directory: go/services/catalog
+        args: --timeout=5m
+  
+  security:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Go
+      uses: actions/setup-go@v5
+      with:
+        go-version: '1.23.x'
+    
+    - name: Run Gosec Security Scanner
+      uses: securego/gosec@master
+      with:
+        args: '-no-fail -fmt json -out gosec-results.json ./...'
+      continue-on-error: true
