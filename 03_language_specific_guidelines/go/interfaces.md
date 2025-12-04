@@ -12,8 +12,8 @@ This is a major difference from languages like Java or C#, where you must use th
 
 This is a common mantra in the Go community, and it's a great rule of thumb to follow.
 
--   **Accept Interfaces:** When you write a function or a method that takes a dependency, it should accept an interface. This allows the caller to pass in any implementation that satisfies the interface, which is especially useful for testing.
--   **Return Structs:** When you return a value from a function, you should usually return a concrete type (a struct). This gives the caller access to all the fields and methods of the struct.
+- **Accept Interfaces:** When you write a function or a method that takes a dependency, it should accept an interface. This allows the caller to pass in any implementation that satisfies the interface, which is especially useful for testing.
+- **Return Structs:** When you return a value from a function, you should usually return a concrete type (a struct). This gives the caller access to all the fields and methods of the struct.
 
 ## 3. The Power of Single-Method Interfaces
 

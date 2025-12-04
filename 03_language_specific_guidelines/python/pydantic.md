@@ -41,6 +41,7 @@ except ValidationError as e:
 ```
 
 This will produce a clear error message:
+
 ```json
 [
   {

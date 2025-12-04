@@ -36,6 +36,7 @@ func counter(out chan<- int) {
     }
 }
 ```
+
 In this version, the `counter` goroutine owns the `count` variable. No other goroutine can access it directly. To get the current count, a goroutine would read from the `out` channel. This is inherently safe.
 
 ## 2. Goroutines and Channels Explained

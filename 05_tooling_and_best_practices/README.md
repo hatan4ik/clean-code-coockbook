@@ -2,7 +2,7 @@
 
 This section covers the tools and practices we recommend for building high-quality, production-ready software. These are the things that separate a hobby project from a professional one.
 
-### Topics
+## Topics
 
 - **[CI/CD](./ci_cd.md)**: Continuous Integration and Continuous Deployment best practices.
 - **[Linting](./linting.md)**: Keeping your codebase clean and consistent with automated linting.

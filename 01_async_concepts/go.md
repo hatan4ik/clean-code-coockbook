@@ -52,6 +52,7 @@ type Clients struct {
     Reviews   *ReviewsClient
 }
 ```
+
 This pattern is very common in Go and is a great way to write clean, testable code.
 
 ### Backpressure and Deadlines

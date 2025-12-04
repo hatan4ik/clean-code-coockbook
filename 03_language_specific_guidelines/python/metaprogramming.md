@@ -64,22 +64,22 @@ In this example, the `PluginBase` metaclass automatically registers all the clas
 
 **Pros:**
 
--   Reduces boilerplate code.
--   Can create more expressive and concise APIs.
--   Can be used to implement cross-cutting concerns like logging and caching.
+- Reduces boilerplate code.
+- Can create more expressive and concise APIs.
+- Can be used to implement cross-cutting concerns like logging and caching.
 
 **Cons:**
 
--   Can make code more difficult to understand and debug.
--   Can be slower than regular code.
--   Can be difficult to get right.
+- Can make code more difficult to understand and debug.
+- Can be slower than regular code.
+- Can be difficult to get right.
 
 #### When to Use Metaprogramming
 
 Metaprogramming should be used with caution. It's a powerful tool, but it can also make your code more complex. Here are some guidelines for when to use metaprogramming:
 
--   When you have a lot of boilerplate code that you want to reduce.
--   When you want to create a more expressive API.
--   When you need to implement a cross-cutting concern.
+- When you have a lot of boilerplate code that you want to reduce.
+- When you want to create a more expressive API.
+- When you need to implement a cross-cutting concern.
 
 If you're not sure whether to use metaprogramming, it's probably best to avoid it.

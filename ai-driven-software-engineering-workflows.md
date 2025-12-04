@@ -134,7 +134,7 @@ AI tools are beginning to address some of these limitations, though with importa
 
 Successful AI adoption requires building trust gradually. Based on change management patterns observed across client engagements, trust develops through:
 
-```
+```text
 Trust = (Reliability × Transparency × Control) / Risk
 ```
 
@@ -183,7 +183,7 @@ Before diving into specific tools and techniques, let's understand how AI integr
 
 **Traditional Workflow (Pre-AI):**
 
-```
+```text
 Requirements (2-3 days) → Architecture (3-5 days) → Implementation (10-15 days) → 
 Testing (5-7 days) → Code Review (2-3 days) → Deployment (1-2 days)
 Total: 23-35 days
@@ -191,7 +191,7 @@ Total: 23-35 days
 
 **AI-Enhanced Workflow (With Mature Integration):**
 
-```
+```text
 Requirements (2-3 days) → Architecture (2-3 days) → AI-Assisted Implementation (7-10 days) → 
 AI-Generated Tests (2-3 days) → AI-Supported Review (1-2 days) → Deployment (1 day)
 Total: 15-22 days (30-40% reduction in this example)
@@ -538,7 +538,7 @@ Total: 15-22 days (30-40% reduction in this example)
 
 **Illustrative Example (Hypothetical Mid-Size Team):**
 
-```
+```text
 📊 EXAMPLE SCENARIO (Not actual data):
 
 Team Size: 50 developers
@@ -692,7 +692,7 @@ def test_user_authentication_with_valid_credentials():
 
 Organizations progress through five distinct stages of AI-assisted development maturity:
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────────────────┐
 │                    AI ADOPTION MATURITY MODEL                            │
 └─────────────────────────────────────────────────────────────────────────┘
@@ -1040,7 +1040,7 @@ Resource schema:
 Example usage:
 [describe expected usage]
 
-```
+```text
 
 **Success Metrics:**
 - Generates compilable code 95%+ of the time
@@ -1054,7 +1054,7 @@ Example usage:
 
 **Prompt Library Structure:**
 
-```
+```text
 prompt-library/
 ├── code-generation/
 │   ├── crud-operations.md
@@ -1218,7 +1218,7 @@ prompt-library/
 
 **Instead of One Giant Prompt:**
 
-```
+```text
 Prompt 1: Design database schema
 Prompt 2: Generate models based on schema from step 1
 Prompt 3: Create repository layer using models from step 2
@@ -1903,7 +1903,7 @@ Before PR merge, junior must:
 ### Comprehensive Tool Comparison Matrix
 
 | Tool | Best Use Case | Context Window | Language Support | Cost | Key Strength | Main Limitation |
-|------|---------------|----------------|------------------|------|--------------|------------------|
+| ------ | --------------- | ---------------- | ------------------ | ------ | -------------- | ------------------ |
 | **GitHub Copilot** | General coding, IDE integration | ~8k tokens | 40+ languages | $10-19/mo | Best IDE integration, large training data | Cloud-only, privacy concerns |
 | **Amazon CodeWhisperer** | AWS development | ~4k tokens | 15+ languages | Free-$19/mo | AWS integration, security scanning | Limited non-AWS use cases |
 | **Tabnine** | Privacy-focused teams | 2-12k tokens | 30+ languages | $0-39/mo | On-premise option, customizable | Smaller training dataset |
@@ -2181,7 +2181,7 @@ graph TD
 
 **Decision Matrix:**
 
-```
+```text
 IF (well_represented AND easily_testable AND fits_context AND not_sensitive)
   THEN use_ai_freely
 ELSE IF (any_security_concern OR safety_critical)
@@ -2375,7 +2375,7 @@ The question is no longer whether AI will transform software engineering—it al
 
 **For Test Generation:**
 
-```
+```text
 Generate comprehensive unit tests for the following function:
 [paste function]
 
@@ -2389,7 +2389,7 @@ Requirements:
 
 **For Code Review:**
 
-```
+```text
 Review the following code for:
 1. Security vulnerabilities
 2. Performance issues
@@ -2404,7 +2404,7 @@ Provide specific line-by-line feedback with severity ratings.
 
 **For Refactoring:**
 
-```
+```text
 Refactor this code to improve:
 - Readability
 - Maintainability
@@ -2422,7 +2422,7 @@ Constraints:
 
 **For Documentation:**
 
-```
+```text
 Generate comprehensive documentation for this module:
 
 [paste code]
@@ -2517,7 +2517,7 @@ Format: [JSDoc/Sphinx/etc.]
 ### Comprehensive AI Coding Tools Evaluation
 
 | Tool | Best For | Pricing | Context Window | Languages | Key Strengths | Limitations |
-|------|----------|---------|----------------|-----------|---------------|-------------|
+| ------ | ---------- | --------- | ---------------- | ----------- | --------------- | ------------- |
 | **GitHub Copilot** | General development | $10-19/mo | 8K tokens | 40+ | Best IDE integration, GitHub ecosystem | Requires internet, limited context |
 | **Amazon CodeWhisperer** | AWS development | Free-$19/mo | 10K tokens | 15+ | AWS integration, security scanning | AWS-centric suggestions |
 | **Tabnine** | Privacy-focused teams | $0-39/mo | 12K tokens | 30+ | On-premise option, compliance-friendly | Smaller training dataset |

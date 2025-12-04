@@ -4,10 +4,10 @@ A consistent code style is crucial for readability and maintainability. Linters 
 
 ## 1. Why Lint and Format?
 
--   **Consistency:** A consistent code style makes it easier for developers to read and understand code, regardless of who wrote it.
--   **Readability:** Linters and formatters can help you write code that is more readable and easier to follow.
--   **Early Bug Detection:** Linters can catch a wide variety of potential bugs, from simple syntax errors to more complex issues like unused variables and race conditions.
--   **Fewer Arguments:** By automating the process of formatting and linting, you can avoid time-wasting arguments about code style.
+- **Consistency:** A consistent code style makes it easier for developers to read and understand code, regardless of who wrote it.
+- **Readability:** Linters and formatters can help you write code that is more readable and easier to follow.
+- **Early Bug Detection:** Linters can catch a wide variety of potential bugs, from simple syntax errors to more complex issues like unused variables and race conditions.
+- **Fewer Arguments:** By automating the process of formatting and linting, you can avoid time-wasting arguments about code style.
 
 ## 2. Python
 

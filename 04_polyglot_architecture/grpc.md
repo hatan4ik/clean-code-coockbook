@@ -2,16 +2,16 @@ This section details how to effectively integrate Python and Go services, levera
 
 ### 8.1. The "Why": Python for Brains, Go for Brawn
 
-*   **Python's Strength:** Unparalleled ecosystem for data science, machine learning, and rapid prototyping. It's our choice for services that require complex calculations, data analysis, or ML model serving (the "Brains").
-*   **Go's Strength:** Exceptional performance for concurrent I/O, networking, and CPU-intensive tasks that can be parallelized. It's our choice for high-throughput API gateways, data processors, and other performance-critical services (the "Brawn").
+* **Python's Strength:** Unparalleled ecosystem for data science, machine learning, and rapid prototyping. It's our choice for services that require complex calculations, data analysis, or ML model serving (the "Brains").
+* **Go's Strength:** Exceptional performance for concurrent I/O, networking, and CPU-intensive tasks that can be parallelized. It's our choice for high-throughput API gateways, data processors, and other performance-critical services (the "Brawn").
 
 ### 8.2. The "How": gRPC and Protocol Buffers
 
 gRPC provides a high-performance, language-agnostic framework for remote procedure calls (RPCs). We use it for several key reasons:
 
-*   **Performance:** gRPC uses HTTP/2 for transport and Protocol Buffers for serialization, which is significantly faster than JSON-over-HTTP.
-*   **Streaming:** It supports client-side, server-side, and bidirectional streaming, enabling real-time communication patterns.
-*   **Strongly-Typed Contracts:** By defining our service interfaces with Protobuf, we get a single source of truth for our data structures and service methods. This contract is used to auto-generate client and server code in both Python and Go, eliminating entire classes of integration errors.
+* **Performance:** gRPC uses HTTP/2 for transport and Protocol Buffers for serialization, which is significantly faster than JSON-over-HTTP.
+* **Streaming:** It supports client-side, server-side, and bidirectional streaming, enabling real-time communication patterns.
+* **Strongly-Typed Contracts:** By defining our service interfaces with Protobuf, we get a single source of truth for our data structures and service methods. This contract is used to auto-generate client and server code in both Python and Go, eliminating entire classes of integration errors.
 
 ### 8.3. Real-World Example: A Recommendation Service
 
@@ -106,36 +106,36 @@ api_gateway/
 package client
 
 import (
-	"context"
-	"log"
+ "context"
+ "log"
 
-	"google.golang.org/grpc"
-	"api_gateway/gen/go/recommendations"
+ "google.golang.org/grpc"
+ "api_gateway/gen/go/recommendations"
 )
 
 type RecommendationClient struct {
-	client recommendations.RecommenderClient
+ client recommendations.RecommenderClient
 }
 
 func NewRecommendationClient(conn *grpc.ClientConn) *RecommendationClient {
-	return &RecommendationClient{
-		client: recommendations.NewRecommenderClient(conn),
-	}
+ return &RecommendationClient{
+  client: recommendations.NewRecommenderClient(conn),
+ }
 }
 
 func (c *RecommendationClient) GetRecommendations(ctx context.Context, userID string, maxResults int32) ([]string, error) {
-	req := &recommendations.RecommendationRequest{
-		UserId:     userID,
-		MaxResults: maxResults,
-	}
+ req := &recommendations.RecommendationRequest{
+  UserId:     userID,
+  MaxResults: maxResults,
+ }
 
-	res, err := c.client.GetRecommendations(ctx, req)
-	if err != nil {
-		log.Printf("Failed to get recommendations: %v", err)
-		return nil, err
-	}
+ res, err := c.client.GetRecommendations(ctx, req)
+ if err != nil {
+  log.Printf("Failed to get recommendations: %v", err)
+  return nil, err
+ }
 
-	return res.ProductIds, nil
+ return res.ProductIds, nil
 }
 ```
 

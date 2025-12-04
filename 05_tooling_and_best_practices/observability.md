@@ -4,9 +4,9 @@ Observability is the ability to understand the internal state of a system from i
 
 The three pillars of observability are:
 
-1.  **Logging:** For recording discrete events.
-2.  **Metrics:** For tracking and aggregating measurements.
-3.  **Tracing:** For understanding the lifecycle of a request as it flows through your system.
+1. **Logging:** For recording discrete events.
+2. **Metrics:** For tracking and aggregating measurements.
+3. **Tracing:** For understanding the lifecycle of a request as it flows through your system.
 
 ## 1. Logging
 
@@ -29,6 +29,7 @@ func main() {
 ```
 
 This will produce a JSON log entry like this:
+
 ```json
 {"time":"2023-10-27T10:00:00.000Z","level":"INFO","msg":"user logged in","user_id":123,"ip_address":"127.0.0.1"}
 ```
@@ -48,10 +49,10 @@ log.info("user.login", user_id=123, ip_address="127.0.0.1")
 
 Metrics are a way of aggregating measurements over time. They are great for monitoring the overall health of your system. The "Four Golden Signals" are a great starting point for what to measure:
 
--   **Latency:** The time it takes to service a request.
--   **Traffic:** The amount of demand being placed on your system.
--   **Errors:** The rate of requests that are failing.
--   **Saturation:** How "full" your system is.
+- **Latency:** The time it takes to service a request.
+- **Traffic:** The amount of demand being placed on your system.
+- **Errors:** The rate of requests that are failing.
+- **Saturation:** How "full" your system is.
 
 ### Prometheus
 

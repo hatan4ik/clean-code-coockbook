@@ -128,7 +128,7 @@ func (e *NetworkError) Error() string {
 
 ## 6. Panic vs. Error
 
--   **Errors** are for expected problems that can be handled by the caller (e.g., file not found, network connection failed).
--   **Panics** are for unrecoverable errors, i.e., programmer mistakes (e.g., index out of bounds, nil pointer dereference).
+- **Errors** are for expected problems that can be handled by the caller (e.g., file not found, network connection failed).
+- **Panics** are for unrecoverable errors, i.e., programmer mistakes (e.g., index out of bounds, nil pointer dereference).
 
 In general, you should use errors for most problems and only use panics for truly exceptional situations. Don't use panics for normal error handling.

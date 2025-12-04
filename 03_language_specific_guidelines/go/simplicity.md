@@ -8,9 +8,9 @@ Go's minimalist philosophy is a reaction to the complexity of languages like C++
 
 The benefits of this approach are:
 
--   **Readability:** Go code is often described as "boring," and that's a good thing. It's easy to read and understand, even for developers who are new to the language.
--   **Maintainability:** Simple code is easier to maintain and refactor. There are fewer hidden surprises and less "magic" to worry about.
--   **Faster Onboarding:** New developers can become productive in Go very quickly, thanks to the small number of language features and the idiomatic style.
+- **Readability:** Go code is often described as "boring," and that's a good thing. It's easy to read and understand, even for developers who are new to the language.
+- **Maintainability:** Simple code is easier to maintain and refactor. There are fewer hidden surprises and less "magic" to worry about.
+- **Faster Onboarding:** New developers can become productive in Go very quickly, thanks to the small number of language features and the idiomatic style.
 
 ## 2. Problem vs. Solution
 
@@ -64,10 +64,10 @@ if err != nil {
 
 ## 3. Guiding Principles for Simple Go Code
 
--   **Return Early:** Use guard clauses to return early from a function. This reduces nesting and makes the "happy path" of the function clear.
--   **Keep Functions Small:** A function should do one thing and do it well. This makes functions easier to test and reason about.
--   **Short, Concise Package Names:** Package names should be short, concise, and meaningful. Avoid names like `utils` or `helpers`.
--   **Avoid Global Variables:** Global variables make it difficult to reason about the state of a program. Pass dependencies explicitly.
--   **Comments Should Explain *Why*, Not *What***: Your code should be self-documenting. Use comments to explain the "why" behind a particular piece of code, not the "what."
+- **Return Early:** Use guard clauses to return early from a function. This reduces nesting and makes the "happy path" of the function clear.
+- **Keep Functions Small:** A function should do one thing and do it well. This makes functions easier to test and reason about.
+- **Short, Concise Package Names:** Package names should be short, concise, and meaningful. Avoid names like `utils` or `helpers`.
+- **Avoid Global Variables:** Global variables make it difficult to reason about the state of a program. Pass dependencies explicitly.
+- **Comments Should Explain *Why*, Not *What***: Your code should be self-documenting. Use comments to explain the "why" behind a particular piece of code, not the "what."
 
 By embracing simplicity, you can write Go code that is not only performant and reliable, but also a joy to work with.

@@ -2,7 +2,7 @@
 
 This section focuses on architecting Go systems based on the philosophy of "simplicity as a feature." We emphasize clarity, performance, and maintainability.
 
-### Topics
+## Topics
 
 - **[Simplicity](./simplicity.md)**: Embracing Go's minimalist philosophy to write code that is easy to read, understand, and maintain.
 - **[Interfaces](./interfaces.md)**: Using interfaces to write flexible and decoupled code.
