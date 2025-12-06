@@ -12,10 +12,10 @@ class FakeUserRepository(UserRepository):
     In-memory fake repository for testing.
     """
     def __init__(self, users: List[User]):
-        self._users = set(users)
+        self._users = list(users)
 
     async def add(self, user: User) -> None:
-        self._users.add(user)
+        self._users.append(user)
 
     async def get_by_email(self, email: str) -> Optional[User]:
         return next((u for u in self._users if u.email == email), None)

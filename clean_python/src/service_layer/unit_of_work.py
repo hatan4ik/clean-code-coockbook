@@ -27,6 +27,8 @@ class SqlAlchemyUnitOfWork:
         try:
             if exc_type:
                 await self.rollback()
+            elif self.session.in_transaction():
+                await self.rollback()
         finally:
             await self.session.close()
 

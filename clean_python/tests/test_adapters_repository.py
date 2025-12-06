@@ -3,6 +3,9 @@ import pytest_asyncio
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 
+# Skip these adapter tests if the async SQLite driver is unavailable.
+pytest.importorskip("aiosqlite")
+
 from src.adapters.orm import Base, UserRecord
 from src.domain.models import User
 from src.service_layer.unit_of_work import SqlAlchemyUnitOfWork
