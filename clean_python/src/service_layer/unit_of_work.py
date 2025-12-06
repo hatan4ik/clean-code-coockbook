@@ -1,4 +1,4 @@
-from typing import Protocol, Self
+from typing import Protocol, Self, Callable
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.adapters.orm import SqlAlchemyUserRepository
 
@@ -15,7 +15,7 @@ class SqlAlchemyUnitOfWork:
     Manages the atomicity of the business transaction.
     Either everything happens, or nothing happens.
     """
-    def __init__(self, session_factory):
+    def __init__(self, session_factory: Callable[[], AsyncSession]):
         self.session_factory = session_factory
 
     async def __aenter__(self) -> Self:
@@ -24,9 +24,11 @@ class SqlAlchemyUnitOfWork:
         return self
 
     async def __aexit__(self, exc_type, *args):
-        if exc_type:
-            await self.rollback()
-        await self.session.close()
+        try:
+            if exc_type:
+                await self.rollback()
+        finally:
+            await self.session.close()
 
     async def commit(self):
         await self.session.commit()
