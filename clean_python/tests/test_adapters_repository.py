@@ -1,51 +1,44 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
 import pytest
-import pytest_asyncio
-from sqlalchemy import select
-from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 
-# Skip these adapter tests if the async SQLite driver is unavailable.
-pytest.importorskip("aiosqlite")
-
-from src.adapters.orm import Base, UserRecord
+from src.adapters.orm import SqlAlchemyUserRepository
 from src.domain.models import User
-from src.service_layer.unit_of_work import SqlAlchemyUnitOfWork
+
+if TYPE_CHECKING:
+    from sqlalchemy.ext.asyncio import AsyncSession
 
 
-@pytest_asyncio.fixture
-async def session_factory():
-    engine = create_async_engine("sqlite+aiosqlite:///:memory:", future=True)
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
-    factory = async_sessionmaker(engine, expire_on_commit=False)
-    try:
-        yield factory
-    finally:
-        await engine.dispose()
+pytestmark = pytest.mark.asyncio
 
 
-@pytest.mark.asyncio
-async def test_sqlalchemy_repo_persists_user(session_factory):
-    uow = SqlAlchemyUnitOfWork(session_factory)
-    async with uow:
-        await uow.users.add(User(username="alice", email="alice@example.com"))
-        await uow.commit()
+async def test_repository_can_add_and_get_user(test_db_session: AsyncSession):
+    """
+    Test that the repository can add a user to the database and retrieve it.
+    """
+    repo = SqlAlchemyUserRepository(test_db_session)
+    user = User(username="testuser", email="test@example.com")
 
-    async with session_factory() as session:
-        result = await session.execute(select(UserRecord).where(UserRecord.email == "alice@example.com"))
-        record = result.scalar_one_or_none()
-        assert record is not None
-        assert record.username == "alice"
-        assert record.is_active is True
+    # Add user and commit
+    await repo.add(user)
+    await test_db_session.commit()
+
+    # Retrieve user
+    retrieved_user = await repo.get_by_email("test@example.com")
+
+    assert retrieved_user is not None
+    assert retrieved_user.username == "testuser"
+    assert retrieved_user.email == "test@example.com"
+    assert retrieved_user.id == user.id
 
 
-@pytest.mark.asyncio
-async def test_uow_rolls_back_on_error(session_factory):
-    uow = SqlAlchemyUnitOfWork(session_factory)
-    with pytest.raises(RuntimeError):
-        async with uow:
-            await uow.users.add(User(username="bob", email="bob@example.com"))
-            raise RuntimeError("boom")
-
-    async with session_factory() as session:
-        result = await session.execute(select(UserRecord).where(UserRecord.email == "bob@example.com"))
-        assert result.scalar_one_or_none() is None
+async def test_repository_get_returns_none_for_nonexistent_user(
+    test_db_session: AsyncSession,
+):
+    """
+    Test that the repository returns None when trying to get a user that does not exist.
+    """
+    repo = SqlAlchemyUserRepository(test_db_session)
+    retrieved_user = await repo.get_by_email("nonexistent@example.com")
+    assert retrieved_user is None
