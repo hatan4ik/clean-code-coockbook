@@ -1,0 +1,56 @@
+syntax = "proto3";
+
+package users.v1;
+
+option go_package = "github.com/clean-code-coockbook/proto/gen/go/users/v1;usersv1";
+
+// UserService defines the contract between the Python "brains" service and the Go edge.
+service UserService {
+  // Registers a user and returns the assigned ID.
+  rpc RegisterUser(RegisterUserRequest) returns (RegisterUserResponse);
+
+  // Fetches a user by email.
+  rpc GetUser(GetUserRequest) returns (GetUserResponse);
+
+  // Streams user events (e.g., registrations) to Go for edge caches/fanout.
+  rpc StreamUserEvents(UserEventsRequest) returns (stream UserEvent);
+}
+
+message RegisterUserRequest {
+  string email = 1;
+  string username = 2;
+}
+
+message RegisterUserResponse {
+  string id = 1;
+  string email = 2;
+  string username = 3;
+  string status = 4; // e.g., "active"
+}
+
+message GetUserRequest {
+  string email = 1;
+}
+
+message GetUserResponse {
+  User user = 1;
+}
+
+message User {
+  string id = 1;
+  string email = 2;
+  string username = 3;
+  bool is_active = 4;
+  string created_at = 5; // RFC3339
+}
+
+message UserEventsRequest {
+  // Reserved for filters (e.g., event types, tenant IDs).
+}
+
+message UserEvent {
+  string id = 1;
+  string type = 2;    // e.g., "user_registered"
+  User payload = 3;
+  string occurred_at = 4; // RFC3339
+}
