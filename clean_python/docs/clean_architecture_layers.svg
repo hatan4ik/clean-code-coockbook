@@ -68,5 +68,5 @@
   <rect x="820" y="120" width="260" height="90" rx="12" fill="#0c4a6e" opacity="0.9" />
   <text class="note" x="840" y="155">Async Everywhere</text>
   <text class="hint" x="840" y="182">I/O awaits in Adapters, UoW commits atomically,</text>
-  <text class="hint" x="840" y="205">Domain stays synchronous & pure.</text>
+  <text class="hint" x="840" y="205">Domain stays synchronous &amp; pure.</text>
 </svg>
