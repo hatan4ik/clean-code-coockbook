@@ -1,5 +1,3 @@
-module github.com/clean-code-coockbook/catalog
+module clean-code-cookbook/go/services/catalog
 
-go 1.24.0
-
-require golang.org/x/sync v0.18.0
+go 1.21

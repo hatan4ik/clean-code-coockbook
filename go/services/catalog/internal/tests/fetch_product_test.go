@@ -4,64 +4,69 @@ import (
 	"context"
 	"errors"
 	"testing"
-	"time"
-
-	"github.com/clean-code-coockbook/catalog/internal/app"
-	"github.com/clean-code-coockbook/catalog/internal/domain"
+	"clean-code-cookbook/go/services/catalog/internal/app"
+	"clean-code-cookbook/go/services/catalog/internal/domain"
 )
 
-type stubClient[T any] struct {
-	value T
-	delay time.Duration
-	err   error
+// mockProductFetcher is a mock implementation of the ProductFetcher port.
+// It allows us to simulate the behavior of an external service.
+type mockProductFetcher struct {
+	mockedProduct *domain.Product
+	mockedError   error
 }
 
-func (s stubClient[T]) Get(ctx context.Context, _ string) (T, error) {
-	if s.delay > 0 {
-		select {
-		case <-time.After(s.delay):
-		case <-ctx.Done():
-			var zero T
-			return zero, ctx.Err()
-		}
+// FetchProductByID is the mock's implementation of the interface method.
+func (m *mockProductFetcher) FetchProductByID(ctx context.Context, id string) (*domain.Product, error) {
+	if m.mockedError != nil {
+		return nil, m.mockedError
 	}
-	if s.err != nil {
-		var zero T
-		return zero, s.err
+	// Simulate finding a product.
+	if m.mockedProduct != nil && m.mockedProduct.ID == id {
+		return m.mockedProduct, nil
 	}
-	return s.value, nil
+	return nil, errors.New("product not found")
 }
 
-func TestFetchProductHappyPath(t *testing.T) {
-	svc := app.Service{
-		Inventory: stubClient[domain.Inventory]{value: domain.Inventory{Available: 3}},
-		Pricing:   stubClient[domain.Price]{value: domain.Price{Currency: "USD", Amount: 9.99}},
-		Reviews:   stubClient[[]string]{value: []string{"ok", "great"}},
-		Timeout:   200 * time.Millisecond,
+func TestFetchProductQuery_Execute_Success(t *testing.T) {
+	// Arrange
+	mockFetcher := &mockProductFetcher{
+		mockedProduct: &domain.Product{ID: "123", Name: "Test Product", Price: 99.99},
 	}
+	query := app.FetchProductQuery{ProductFetcher: mockFetcher}
+	ctx := context.Background()
 
-	product, err := svc.FetchProduct(context.Background(), "p1")
+	// Act
+	product, err := query.Execute(ctx, "123")
+
+	// Assert
 	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
+		t.Fatalf("Expected no error, but got: %v", err)
 	}
-	if product.ID != "p1" || product.Inventory.Available != 3 || product.Price.Amount != 9.99 {
-		t.Fatalf("unexpected product: %+v", product)
+	if product == nil {
+		t.Fatal("Expected a product, but got nil")
 	}
-	if len(product.Reviews) != 2 {
-		t.Fatalf("unexpected reviews: %+v", product.Reviews)
+	if product.Name != "Test Product" {
+		t.Errorf("Expected product name 'Test Product', but got '%s'", product.Name)
 	}
 }
 
-func TestFetchProductTimeout(t *testing.T) {
-	svc := app.Service{
-		Inventory: stubClient[domain.Inventory]{value: domain.Inventory{Available: 3}, delay: 300 * time.Millisecond},
-		Pricing:   stubClient[domain.Price]{value: domain.Price{Currency: "USD", Amount: 9.99}},
-		Reviews:   stubClient[[]string]{value: []string{"ok"}},
-		Timeout:   100 * time.Millisecond,
+func TestFetchProductQuery_Execute_FetcherError(t *testing.T) {
+	// Arrange
+	expectedError := errors.New("network error")
+	mockFetcher := &mockProductFetcher{
+		mockedError: expectedError,
 	}
+	query := app.FetchProductQuery{ProductFetcher: mockFetcher}
+	ctx := context.Background()
 
-	_, err := svc.FetchProduct(context.Background(), "p1")
-	if !errors.Is(err, app.ErrUpstreamTimeout) {
-		t.Fatalf("expected timeout error, got %v", err)
+	// Act
+	_, err := query.Execute(ctx, "123")
+
+	// Assert
+	if err == nil {
+		t.Fatal("Expected an error, but got nil")
+	}
+	if !errors.Is(err, expectedError) {
+		t.Fatalf("Expected error '%v', but got '%v'", expectedError, err)
 	}
 }

@@ -2,64 +2,31 @@ package app
 
 import (
 	"context"
-	"errors"
-	"time"
-
-	"github.com/clean-code-coockbook/catalog/internal/domain"
-	"github.com/clean-code-coockbook/catalog/internal/ports"
-	"golang.org/x/sync/errgroup"
+	"fmt"
+	"clean-code-cookbook/go/services/catalog/internal/domain"
+	"clean-code-cookbook/go/services/catalog/internal/ports"
 )
 
-var ErrUpstreamTimeout = errors.New("upstream timed out")
-
-type Service struct {
-	Inventory ports.InventoryClient
-	Pricing   ports.PricingClient
-	Reviews   ports.ReviewsClient
-	Timeout   time.Duration
+// FetchProductQuery is a use case that fetches a product.
+// It holds a reference to the ProductFetcher port, but is unaware of the
+// concrete implementation (e.g., HTTP client, gRPC client, DB repository).
+type FetchProductQuery struct {
+	ProductFetcher ports.ProductFetcher
 }
 
-// FetchProduct fan-outs to three upstreams with a shared deadline and cancels siblings on error.
-func (s Service) FetchProduct(ctx context.Context, id string) (domain.Product, error) {
-	timeout := s.Timeout
-	if timeout == 0 {
-		timeout = 200 * time.Millisecond
-	}
-	ctx, cancel := context.WithTimeout(ctx, timeout)
-	defer cancel()
-
-	group, ctx := errgroup.WithContext(ctx)
-	var inv domain.Inventory
-	var price domain.Price
-	var reviews []string
-
-	group.Go(func() error {
-		var err error
-		inv, err = s.Inventory.Get(ctx, id)
-		return err
-	})
-	group.Go(func() error {
-		var err error
-		price, err = s.Pricing.Get(ctx, id)
-		return err
-	})
-	group.Go(func() error {
-		var err error
-		reviews, err = s.Reviews.Get(ctx, id)
-		return err
-	})
-
-	if err := group.Wait(); err != nil {
-		if errors.Is(err, context.DeadlineExceeded) || errors.Is(ctx.Err(), context.DeadlineExceeded) {
-			return domain.Product{}, ErrUpstreamTimeout
-		}
-		return domain.Product{}, err
+// Execute runs the use case.
+// It takes the necessary parameters and returns a domain model or an error.
+func (q *FetchProductQuery) Execute(ctx context.Context, id string) (*domain.Product, error) {
+	product, err := q.ProductFetcher.FetchProductByID(ctx, id)
+	if err != nil {
+		// In a real application, you might want to add more structured logging here.
+		return nil, fmt.Errorf("failed to fetch product with id %s: %w", id, err)
 	}
 
-	return domain.Product{
-		ID:        id,
-		Inventory: inv,
-		Price:     price,
-		Reviews:   reviews,
-	}, nil
+	// Here you could add more business logic, for example:
+	// - Checking if the product is in stock.
+	// - Applying a discount.
+	// - Checking user permissions.
+
+	return product, nil
 }

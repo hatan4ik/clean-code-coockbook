@@ -2,18 +2,13 @@ package ports
 
 import (
 	"context"
-
-	"github.com/clean-code-coockbook/catalog/internal/domain"
+	"clean-code-cookbook/go/services/catalog/internal/domain"
 )
 
-type InventoryClient interface {
-	Get(ctx context.Context, productID string) (domain.Inventory, error)
-}
-
-type PricingClient interface {
-	Get(ctx context.Context, productID string) (domain.Price, error)
-}
-
-type ReviewsClient interface {
-	Get(ctx context.Context, productID string) ([]string, error)
+// ProductFetcher is a port that defines the contract for fetching product data
+// from an external source, such as another microservice or a database.
+type ProductFetcher interface {
+	// FetchProductByID fetches a single product by its ID.
+	// It uses a context for cancellation and deadlines.
+	FetchProductByID(ctx context.Context, id string) (*domain.Product, error)
 }

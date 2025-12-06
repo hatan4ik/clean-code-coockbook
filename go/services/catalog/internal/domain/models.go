@@ -1,17 +1,10 @@
 package domain
 
-type Inventory struct {
-	Available int
-}
-
-type Price struct {
-	Currency string
-	Amount   float64
-}
-
+// Product is the core domain model. It represents a product in our catalog.
+// Note that it contains no tags for JSON or database serialization.
+// This is a pure, business-logic-oriented struct.
 type Product struct {
-	ID        string
-	Inventory Inventory
-	Price     Price
-	Reviews   []string
+	ID    string
+	Name  string
+	Price float64 // Use float64 for currency in this example, but consider a dedicated type in production.
 }
