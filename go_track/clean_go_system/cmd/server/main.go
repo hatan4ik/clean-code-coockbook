@@ -4,47 +4,41 @@ import (
 	"database/sql"
 	"log"
 	"net/http"
-	"os"
-	"time"
 
-	_ "github.com/lib/pq" // Postgres driver
-
-	httpadapter "clean_go_system/internal/adapter/http"
 	"clean_go_system/internal/adapter/postgres"
 	"clean_go_system/internal/core"
+	_ "github.com/lib/pq" // Postgres Driver
 )
 
 func main() {
-	connStr := envOrDefault("DATABASE_URL", "postgres://user:pass@localhost:5432/db?sslmode=disable")
+	// 1. Infrastructure
+	connStr := "user=postgres dbname=mydb sslmode=disable"
 	db, err := sql.Open("postgres", connStr)
 	if err != nil {
 		log.Fatal(err)
 	}
-	db.SetConnMaxLifetime(30 * time.Minute)
-	db.SetMaxOpenConns(20)
-	db.SetMaxIdleConns(5)
 	defer db.Close()
 
+	// 2. Wiring Layers (The "Composition Root")
 	repo := postgres.NewPostgresRepository(db)
-	userService := core.NewUserService(repo)
+	svc := core.NewUserService(repo)
 
-	emailPool := core.NewWorkerPool(5, 100)
+	// 3. Background Workers
+	emailPool := core.NewWorkerPool(5, 100) // 5 Workers, Buffer of 100
 	emailPool.Start()
 	defer emailPool.Stop()
 
-	handler := httpadapter.NewHandler(userService, emailPool)
+	// 4. HTTP Handlers (Using Standard Lib or Chi/Gin)
+	http.HandleFunc("/register", func(w http.ResponseWriter, r *http.Request) {
+		// Parse JSON...
+		// Call svc.Register()...
+		// Send Email Job to Pool: emailPool.JobQueue <- job
+		w.WriteHeader(http.StatusCreated)
+	})
 
-	http.HandleFunc("/register", handler.Register)
-
-	log.Println("server starting on :8080")
+	// 5. Start Server
+	log.Println("Server starting on :8080")
 	if err := http.ListenAndServe(":8080", nil); err != nil {
 		log.Fatal(err)
 	}
-}
-
-func envOrDefault(key, fallback string) string {
-	if v := os.Getenv(key); v != "" {
-		return v
-	}
-	return fallback
 }
