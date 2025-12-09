@@ -66,6 +66,8 @@ Database
 
 **Total:** ~90 lines to understand the entire flow.
 
+**Extra async hex example:** Try `pytest tests/test_async_hex_example.py -v` and browse `src/async_hex_example/` for a lightweight project service with an in-memory unit of work.
+
 ## 4. Run the API (3 min)
 
 ```bash

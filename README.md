@@ -78,6 +78,7 @@ clean_python/
    - Translates domain ↔ database
    - **Swappable**: Replace with MongoDB adapter without touching domain
 
+4. **New async hex example**: `clean_python/src/async_hex_example/` + tests in `clean_python/tests/test_async_hex_example.py` show a small project service with an in-memory unit of work.
 4. **[service_layer/unit_of_work.py](./clean_python/src/service_layer/unit_of_work.py)** - Transaction safety
    ```python
    async with uow:
