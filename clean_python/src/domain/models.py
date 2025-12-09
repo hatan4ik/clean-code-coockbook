@@ -17,9 +17,14 @@ class User(BaseModel):
     @field_validator("username")
     @classmethod
     def validate_username(cls, v: str) -> str:
-        if not re.match("^[a-zA-Z0-9_]+$", v):
-            raise ValueError("Username must be alphanumeric")
-        return v
+        """Validate username with comprehensive rules."""
+        if len(v) < 3 or len(v) > 30:
+            raise ValueError("Username must be 3-30 characters")
+        if not re.match("^[a-zA-Z][a-zA-Z0-9_]*$", v):
+            raise ValueError("Username must start with letter, contain only alphanumeric and underscore")
+        if v.endswith("_"):
+            raise ValueError("Username cannot end with underscore")
+        return v.lower()  # Normalize to lowercase
     
     def can_receive_email(self) -> bool:
         """Pure business logic method."""

@@ -1,9 +1,10 @@
 from typing import Protocol, Self, Callable
 from sqlalchemy.ext.asyncio import AsyncSession
-from src.adapters.orm import SqlAlchemyUserRepository
+from src.domain.ports import UserRepository
 
 class AbstractUnitOfWork(Protocol):
-    users: SqlAlchemyUserRepository
+    """Unit of Work pattern for managing transactions."""
+    users: UserRepository  # Abstract interface, not concrete implementation
 
     async def __aenter__(self) -> Self: ...
     async def __aexit__(self, *args) -> None: ...
@@ -32,8 +33,10 @@ class SqlAlchemyUnitOfWork:
         finally:
             await self.session.close()
 
-    async def commit(self):
+    async def commit(self) -> None:
+        """Commit the current transaction."""
         await self.session.commit()
 
-    async def rollback(self):
+    async def rollback(self) -> None:
+        """Rollback the current transaction."""
         await self.session.rollback()

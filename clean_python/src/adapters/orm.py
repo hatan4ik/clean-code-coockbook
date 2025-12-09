@@ -62,9 +62,11 @@ class SqlAlchemyUserRepository(UserRepository):
     def __init__(self, session: AsyncSession):
         self.session = session
 
-    async def add(self, user: User) -> None:
-        # We add to session, but DO NOT commit here.
-        # Commits are the responsibility of the Unit of Work.
+    def add(self, user: User) -> None:
+        """Add user to session (synchronous - no I/O).
+        
+        Note: Does NOT commit. Commits are managed by Unit of Work.
+        """
         self.session.add(_to_record(user))
 
     async def get_by_email(self, email: str) -> Optional[User]:
