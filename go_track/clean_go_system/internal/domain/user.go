@@ -2,9 +2,16 @@ package domain
 
 import (
 	"context"
+	"errors"
 	"time"
 
 	"github.com/google/uuid"
+)
+
+// Common Domain Errors
+var (
+	ErrUserNotFound = errors.New("user not found")
+	ErrInvalidEmail = errors.New("invalid email format")
 )
 
 // User is our clean entity
